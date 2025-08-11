@@ -74,8 +74,16 @@ const ProductionTab = () => {
     
     try {
       // Generate batch number
-      const { data: batchNumber } = await supabase
+      const { data: batchNumber, error: batchError } = await supabase
         .rpc('generate_batch_number', { _sku_id: selectedSKU });
+
+      if (batchError) {
+        throw new Error(`Failed to generate batch number: ${batchError.message}`);
+      }
+
+      if (!batchNumber) {
+        throw new Error('Failed to generate batch number: null returned');
+      }
 
       // Create batch
       const { error } = await supabase
