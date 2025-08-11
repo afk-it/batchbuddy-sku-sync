@@ -101,5 +101,16 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-size: 16px; /* Prevent iOS zoom on input focus */
+  }
+
+  /* Mobile-first optimizations */
+  input, select, textarea {
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+
+  /* Touch-friendly tap targets */
+  button, [role="button"], input[type="submit"], input[type="button"] {
+    min-height: 44px;
   }
 }

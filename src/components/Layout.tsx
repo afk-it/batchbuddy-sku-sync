@@ -15,9 +15,20 @@ const Layout = () => {
   const { user, signOut, isAdmin } = useAuth();
   const { toast } = useToast();
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isIOS, setIsIOS] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
 
   // PWA install functionality
   useState(() => {
+    // Check if device is iOS
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    setIsIOS(iOS);
+    
+    // Check if already in standalone mode
+    const standalone = window.matchMedia('(display-mode: standalone)').matches;
+    setIsStandalone(standalone);
+
+    // Android/Desktop PWA install
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -35,6 +46,12 @@ const Layout = () => {
         });
       }
       setDeferredPrompt(null);
+    } else if (isIOS && !isStandalone) {
+      // Show iOS install instructions
+      toast({
+        title: "Install App",
+        description: "Tap the Share button and select 'Add to Home Screen'",
+      });
     }
   };
 
@@ -48,37 +65,37 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h1 className="text-xl font-bold text-foreground">SKU Manager</h1>
+      <header className="border-b bg-card sticky top-0 z-50">
+        <div className="container mx-auto px-3 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h1 className="text-lg font-bold text-foreground">SKU Manager</h1>
             {isAdmin && (
-              <Badge variant="secondary">Admin</Badge>
+              <Badge variant="secondary" className="text-xs">Admin</Badge>
             )}
           </div>
-          <div className="flex items-center gap-2">
-            {deferredPrompt && (
-              <Button variant="outline" size="sm" onClick={handleInstall}>
-                <Download className="h-4 w-4 mr-2" />
-                Install App
+          <div className="flex items-center gap-1">
+            {(deferredPrompt || (isIOS && !isStandalone)) && (
+              <Button variant="outline" size="sm" onClick={handleInstall} className="text-xs px-2">
+                <Download className="h-3 w-3 mr-1" />
+                <span className="hidden sm:inline">Install</span>
               </Button>
             )}
-            <span className="text-sm text-muted-foreground">{user?.email}</span>
-            <Button variant="outline" size="sm" onClick={handleSignOut}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Sign Out
+            <span className="text-xs text-muted-foreground hidden sm:inline">{user?.email}</span>
+            <Button variant="outline" size="sm" onClick={handleSignOut} className="text-xs px-2">
+              <LogOut className="h-3 w-3 sm:mr-1" />
+              <span className="hidden sm:inline">Sign Out</span>
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6">
+      <main className="container mx-auto px-3 py-4">
         <Tabs defaultValue="production" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="production">Production</TabsTrigger>
-            <TabsTrigger value="skus">SKUs</TabsTrigger>
-            <TabsTrigger value="history">History</TabsTrigger>
-            {isAdmin && <TabsTrigger value="admin">Admin</TabsTrigger>}
+          <TabsList className="grid w-full grid-cols-4 mb-4">
+            <TabsTrigger value="production" className="text-xs">Production</TabsTrigger>
+            <TabsTrigger value="skus" className="text-xs">SKUs</TabsTrigger>
+            <TabsTrigger value="history" className="text-xs">History</TabsTrigger>
+            {isAdmin && <TabsTrigger value="admin" className="text-xs">Admin</TabsTrigger>}
           </TabsList>
 
           <TabsContent value="production" className="space-y-6">

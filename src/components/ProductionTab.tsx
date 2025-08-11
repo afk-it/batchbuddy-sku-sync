@@ -109,44 +109,44 @@ const ProductionTab = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Pieces</CardTitle>
-            <Package className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs font-medium">Total Pieces</CardTitle>
+            <Package className="h-3 w-3 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totalPieces.toLocaleString()}</div>
+          <CardContent className="pt-2">
+            <div className="text-lg font-bold">{totalPieces.toLocaleString()}</div>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Today's Pieces</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-xs font-medium">Today's Pieces</CardTitle>
+            <Calendar className="h-3 w-3 text-muted-foreground" />
           </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{todayPieces.toLocaleString()}</div>
+          <CardContent className="pt-2">
+            <div className="text-lg font-bold">{todayPieces.toLocaleString()}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Batch Form */}
       <Card>
-        <CardHeader>
-          <CardTitle>Create New Batch</CardTitle>
-          <CardDescription>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg">Create New Batch</CardTitle>
+          <CardDescription className="text-sm">
             Select a SKU and enter the quantity to create a new batch
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="sku">SKU</Label>
+              <Label htmlFor="sku" className="text-sm font-medium">SKU</Label>
               <Select value={selectedSKU} onValueChange={setSelectedSKU}>
-                <SelectTrigger>
+                <SelectTrigger className="h-12">
                   <SelectValue placeholder="Select a SKU" />
                 </SelectTrigger>
                 <SelectContent>
@@ -160,7 +160,7 @@ const ProductionTab = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="quantity">Quantity</Label>
+              <Label htmlFor="quantity" className="text-sm font-medium">Quantity</Label>
               <Input
                 id="quantity"
                 type="number"
@@ -169,10 +169,15 @@ const ProductionTab = () => {
                 placeholder="Enter quantity"
                 min="1"
                 required
+                className="h-12 text-base"
               />
             </div>
             
-            <Button type="submit" disabled={loading || !selectedSKU || !quantity}>
+            <Button 
+              type="submit" 
+              disabled={loading || !selectedSKU || !quantity}
+              className="w-full h-12 text-base font-medium"
+            >
               {loading ? 'Creating...' : 'Create Batch'}
             </Button>
           </form>
