@@ -74,16 +74,8 @@ const ProductionTab = () => {
     
     try {
       // Generate batch number
-      const { data: batchNumber, error: batchError } = await supabase
+      const { data: batchNumber } = await supabase
         .rpc('generate_batch_number', { _sku_id: selectedSKU });
-
-      if (batchError) {
-        throw new Error(`Failed to generate batch number: ${batchError.message}`);
-      }
-
-      if (!batchNumber) {
-        throw new Error('Failed to generate batch number: null returned');
-      }
 
       // Create batch
       const { error } = await supabase
@@ -117,44 +109,44 @@ const ProductionTab = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium">Total Pieces</CardTitle>
-            <Package className="h-3 w-3 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Total Pieces</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="pt-2">
-            <div className="text-lg font-bold">{totalPieces.toLocaleString()}</div>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalPieces.toLocaleString()}</div>
           </CardContent>
         </Card>
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs font-medium">Today's Pieces</CardTitle>
-            <Calendar className="h-3 w-3 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">Today's Pieces</CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
-          <CardContent className="pt-2">
-            <div className="text-lg font-bold">{todayPieces.toLocaleString()}</div>
+          <CardContent>
+            <div className="text-2xl font-bold">{todayPieces.toLocaleString()}</div>
           </CardContent>
         </Card>
       </div>
 
       {/* Batch Form */}
       <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Create New Batch</CardTitle>
-          <CardDescription className="text-sm">
+        <CardHeader>
+          <CardTitle>Create New Batch</CardTitle>
+          <CardDescription>
             Select a SKU and enter the quantity to create a new batch
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="sku" className="text-sm font-medium">SKU</Label>
+              <Label htmlFor="sku">SKU</Label>
               <Select value={selectedSKU} onValueChange={setSelectedSKU}>
-                <SelectTrigger className="h-12">
+                <SelectTrigger>
                   <SelectValue placeholder="Select a SKU" />
                 </SelectTrigger>
                 <SelectContent>
@@ -168,7 +160,7 @@ const ProductionTab = () => {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="quantity" className="text-sm font-medium">Quantity</Label>
+              <Label htmlFor="quantity">Quantity</Label>
               <Input
                 id="quantity"
                 type="number"
@@ -177,15 +169,10 @@ const ProductionTab = () => {
                 placeholder="Enter quantity"
                 min="1"
                 required
-                className="h-12 text-base"
               />
             </div>
             
-            <Button 
-              type="submit" 
-              disabled={loading || !selectedSKU || !quantity}
-              className="w-full h-12 text-base font-medium"
-            >
+            <Button type="submit" disabled={loading || !selectedSKU || !quantity}>
               {loading ? 'Creating...' : 'Create Batch'}
             </Button>
           </form>
